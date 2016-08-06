@@ -1,3 +1,5 @@
+package guesswords;
+
 public class Game {
 
 	private String compWord, userWord, winner;
@@ -32,26 +34,20 @@ public class Game {
 		this.userWord = userWord;
 	}
 
-	public boolean isGameOver(Dictionary dict, String currentWord) {
-		return gameOver;
-	}
-	
-	public void updateStatus(Dictionary dict, String currentWord) {
-		String wordToMatch;
-		if (isComputerTurn()) {
-            int numOfCharsInCommon = dict.getNumberOfCharactersInCommon(currentWord, userWord);
-			dict.updateProbablesList(currentWord, numOfCharsInCommon);
-		} else {
-		    System.out.println("Number of characters in common: " + dict.getNumberOfCharactersInCommon(currentWord, compWord));
-        }
-		if(isComputerTurn()) {
-			wordToMatch = userWord;
+	public boolean isGameOver(Dictionary dict, String userGuess) {
+		System.out.println("Number of characters in common: " + dict.getNumberOfCharactersInCommon(userGuess, compWord));
+    	setWinner("user");
+		gameOver = userGuess.equals(compWord);
+		String compGuess = dict.getRandomWord();
+		int numOfCharsInCommon = dict.getNumberOfCharactersInCommon(compGuess, userWord);
+		dict.updateProbablesList(compGuess, numOfCharsInCommon);
+//		System.out.println(dict.getProbablesList().size());
+		if(!gameOver) {
+//			System.out.println(gameOver);
+			gameOver = compGuess.equals(userWord);
 			setWinner("computer");
-		} else {
-			wordToMatch = compWord;
-			setWinner("user");
 		}
-		gameOver = wordToMatch.equals(currentWord);
+		return gameOver;
 	}
 	
 	public String getWinner() {

@@ -1,7 +1,15 @@
+package guesswords;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class Dictionary {
 
@@ -37,7 +45,6 @@ public class Dictionary {
 			}
 		}
 		probablesList = temp;
-        System.out.println(probablesList.size());
 	}
 
 	public Set<String> getProbablesList() {
