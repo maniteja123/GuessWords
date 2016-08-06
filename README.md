@@ -17,11 +17,6 @@ functions we need:
 Data: Keep 2 lists - the dictionary and the list of possible words that could match.  
 5. Filter all the words that don't contain exactly 'n' characters in common with a word.  
   
-We have four classes: Word, WordUtils, Game, Player.  
-Word has a word and does 1, 2, 3, 4.  
-WordUtils helps word do 1.  
+We have two classes: Dictionary, Game.  
+Dictionary does 1, 2, 3, 4.  
 Game does 5.  
-Player deals with Data in the following way:  
-each Player class contains the  
--wordToFind  
--guessedWord  
