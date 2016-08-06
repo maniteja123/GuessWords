@@ -1,46 +1,46 @@
-package guesswords;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
-import java.util.Scanner;
-import java.util.Set;
-import java.util.TreeSet;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.*;
 
 public class Dictionary {
 
 	private static TreeSet<String> legalWords;
-	private TreeSet<String> probablesList;
+	private Set<String> probablesList;
 
-	public Dictionary(String filePath) {
+	public Dictionary(String filePath) throws IOException {
 		this.legalWords = this.getInstance(filePath);
 		probablesList = this.legalWords;
 	}
 
-	private TreeSet<String> getInstance(String filePath) {
-		if (Dictionary.legalWords != null) {
-			Scanner sc = new Scanner(filePath);
-			while (sc.hasNext()) {
-				Dictionary.legalWords.add(sc.next().toLowerCase());
-			}
-			sc.close();
+	private TreeSet<String> getInstance(String filePath) throws IOException {
+		if (legalWords == null) {
+		    legalWords = new TreeSet<> ();
+            FileReader file = new FileReader(filePath);
+            BufferedReader reader = new BufferedReader(file);
+            List<String> lines = new ArrayList<>();
+            String singleLine = "";
+            while ((singleLine = reader.readLine()) != null) {
+                legalWords.add(singleLine.toLowerCase());
+            }
 		}
-		return Dictionary.legalWords;
+		return legalWords;
 	}
 	
 	public void updateProbablesList(String currentWord, int numOfCharsInCommon) {
-		Iterator<String> iter = probablesList.iterator();
+		Set<String> temp = new TreeSet<>();
+        Iterator<String> iter = probablesList.iterator();
 		while (iter.hasNext()) {
 			String s = iter.next();
-			if(getNumberOfCharactersInCommon(s, currentWord) != numOfCharsInCommon) {
-				probablesList.remove(s);
+			if(getNumberOfCharactersInCommon(s, currentWord) == numOfCharsInCommon) {
+				temp.add(s);
 			}
 		}
+		probablesList = temp;
+        System.out.println(probablesList.size());
 	}
 
-	public TreeSet<String> getProbablesList() {
+	public Set<String> getProbablesList() {
 		return probablesList;
 	}
 
@@ -63,7 +63,7 @@ public class Dictionary {
 	public String getRandomWord(int length) {
 		String s = new String();
 		int dictSize = this.getSize();
-		ArrayList<String> stringList = new ArrayList<String>(Dictionary.legalWords);
+		ArrayList<String> stringList = new ArrayList<String>(probablesList);
 		Random randomGenerator = new Random();
 		int index = randomGenerator.nextInt(dictSize);
 		s = stringList.get(index);
@@ -73,6 +73,14 @@ public class Dictionary {
 		}
 		return s;
 	}
+
+	public String getRandomWord() {
+        ArrayList<String> stringList = new ArrayList<>(probablesList);
+        Random randomGenerator = new Random();
+        int index = randomGenerator.nextInt(stringList.size());
+        return stringList.get(index);
+    }
+
 
 
 	/**
@@ -115,10 +123,7 @@ public class Dictionary {
 
 		/* Returns the intersection */
 		charSet1.retainAll(charSet2);
-
-		Character[] commonWords = charSet1.toArray(new Character[0]);
-
-		return commonWords.length;
+		return charSet1.size();
 	}
 	
 }

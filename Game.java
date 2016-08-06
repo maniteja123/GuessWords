@@ -1,5 +1,3 @@
-package guesswords;
-
 public class Game {
 
 	private String compWord, userWord, winner;
@@ -35,19 +33,17 @@ public class Game {
 	}
 
 	public boolean isGameOver(Dictionary dict, String currentWord) {
-		updateStatus(dict, currentWord);
 		return gameOver;
 	}
 	
 	public void updateStatus(Dictionary dict, String currentWord) {
 		String wordToMatch;
-		int numOfCharsInCommon;
-		if(isComputerTurn()) {
-			numOfCharsInCommon = dict.getNumberOfCharactersInCommon(currentWord, userWord);
+		if (isComputerTurn()) {
+            int numOfCharsInCommon = dict.getNumberOfCharactersInCommon(currentWord, userWord);
+			dict.updateProbablesList(currentWord, numOfCharsInCommon);
 		} else {
-			numOfCharsInCommon = dict.getNumberOfCharactersInCommon(currentWord, compWord);
-		}
-		dict.updateProbablesList(currentWord, numOfCharsInCommon);
+		    System.out.println("Number of characters in common: " + dict.getNumberOfCharactersInCommon(currentWord, compWord));
+        }
 		if(isComputerTurn()) {
 			wordToMatch = userWord;
 			setWinner("computer");
