@@ -13,15 +13,34 @@ import java.util.TreeSet;
 
 public class Dictionary {
 
-	private static TreeSet<String> legalWords;
+	private static Set<String> legalWords;
 	private Set<String> probablesList;
 
 	public Dictionary(String filePath) throws IOException {
 		this.legalWords = this.getInstance(filePath);
 		probablesList = this.legalWords;
 	}
+	
+	public Dictionary(String filePath, int length) throws IOException {
+		this.legalWords = this.getInstance(filePath);
+		System.out.println(this.legalWords.size());
+		probablesList = new TreeSet<>();
+		for(String s : this.legalWords) {
+			if(s.length() == length) {
+				probablesList.add(s);
+			}
+		}
+	}
 
-	private TreeSet<String> getInstance(String filePath) throws IOException {
+	/**
+	 * ResourceFactory type method is for
+	 * building the intital legal words
+	 * set from the sopwords.txt file
+	 * @param filePath
+	 * @return
+	 * @throws IOException
+	 */
+	private Set<String> getInstance(String filePath) throws IOException {
 		if (legalWords == null) {
 		    legalWords = new TreeSet<> ();
             FileReader file = new FileReader(filePath);
@@ -35,16 +54,24 @@ public class Dictionary {
 		return legalWords;
 	}
 	
+	/**
+	 * This method is used for updating the probable word list
+	 * based on the number of common characters between
+	 * the guessed word of computer and chosen user word
+	 * @param currentWord
+	 * @param numOfCharsInCommon
+	 */
 	public void updateProbablesList(String currentWord, int numOfCharsInCommon) {
-		Set<String> temp = new TreeSet<>();
+//		Set<String> temp = new TreeSet<>();
         Iterator<String> iter = probablesList.iterator();
 		while (iter.hasNext()) {
 			String s = iter.next();
-			if(getNumberOfCharactersInCommon(s, currentWord) == numOfCharsInCommon) {
-				temp.add(s);
+			if(getNumberOfCharactersInCommon(s, currentWord) != numOfCharsInCommon) {
+//				temp.add(s);
+				iter.remove();
 			}
 		}
-		probablesList = temp;
+//		probablesList = temp;
 	}
 
 	public Set<String> getProbablesList() {
@@ -67,20 +94,30 @@ public class Dictionary {
 		return word.length();
 	}
 
+	/**
+	 * generate a random word for
+	 * the computer as initial word
+	 * @param length
+	 * @return
+	 */
 	public String getRandomWord(int length) {
 		String s = new String();
-		int dictSize = this.getSize();
 		ArrayList<String> stringList = new ArrayList<String>(probablesList);
 		Random randomGenerator = new Random();
-		int index = randomGenerator.nextInt(dictSize);
+		int index = randomGenerator.nextInt(probablesList.size());
 		s = stringList.get(index);
 		while ((getNumberOfCharacters(s) != length) ||  !areAllCharactersUnique(s)) {
-			index = randomGenerator.nextInt(dictSize);
+			index = randomGenerator.nextInt(probablesList.size());
 			s = stringList.get(index);
 		}
 		return s;
 	}
 
+	/**
+	 * Generate a random word for the computer guess
+	 * from the current probable list
+	 * @return
+	 */
 	public String getRandomWord() {
         ArrayList<String> stringList = new ArrayList<>(probablesList);
         Random randomGenerator = new Random();

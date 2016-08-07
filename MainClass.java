@@ -23,11 +23,16 @@ public class MainClass {
         }
         Game game = new Game();
         Scanner sc = new Scanner(System.in);
-        System.out.println("Enter the number of matches");
+        System.out.println("Enter the number of games");
         int T = sc.nextInt();
         for(int i=1; i<=T; i++) {
         	System.out.println("Enter the difficulty");
         	String s = sc.next().toUpperCase();
+        	try {
+				dict = new Dictionary("sowpods.txt", level.get(s));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
         	String word = new String();
 	        System.out.println("Enter your word");
 	        word = sc.next().toLowerCase();
